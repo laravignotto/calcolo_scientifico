@@ -1,0 +1,383 @@
+\section{Prima esercitazione}
+
+
+%%%%%%%%%%
+\subsection{Esercizio 1}
+Testo dell'esercizio e primi 3 punti.
+
+
+\paragraph{d)} Dato $g=\dfrac{7}{5}$, verifica $y \neq \mathcal{F}$ e determina $\hat{y}= fl(y)\in \mathcal{F}$.
+
+\begin{equation*}
+  y=\dfrac{7}{5}=1.4
+\end{equation*}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{cc|cc}
+\multicolumn{1}{c|}{\multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}moltiplicato per\\ la base (2)\end{tabular}}} & 1.4 & 1                      &                          \\
+\multicolumn{1}{c|}{}                                                                                        & 0.8 & \multicolumn{1}{c|}{0} &                          \\
+                                                                                                             & 1.6 & \multicolumn{1}{c|}{1} & \multirow{2}{*}{periodo} \\
+                                                                                                             & 1.2 & \multicolumn{1}{c|}{1} &                          \\
+                                                                                                             & 0.4 & \multicolumn{1}{c|}{0} &                          \\
+                                                                                                             & 0.8 &                        &                         
+\end{tabular}
+\end{table}
+
+\begin{equation*}
+  y=(1.\overline{0110})_2
+\end{equation*}
+
+Ha rappresentazione infinita, quindi $\notin \mathcal{F}$.
+
+\begin{equation*}
+\begin{split}
+  y &=2^1\cdot (0.1\overline{011\underline{0}\tikzmark{a}})_2 \hspace{.5cm}\tikzmark{b}\\
+  f(y) &=2^1\cdot (0.1011)_2
+\end{split}
+\end{equation*}
+\begin{tikzpicture}[overlay, remember picture]
+  \draw[->,bend right] (a.south west)+(0,-.1cm) to (b.south east) node[midway] {}node[right] {\footnotesize $(t+1)$esima cifra};
+\end{tikzpicture}%
+
+
+\paragraph{e)} Calcola $z=\tilde{x}+2\tilde{y}$ e $\tilde{z}=\tilde{x}fl(t)2\tilde{y}$.
+
+\begin{equation*}
+  \tilde{x} = 2^{-2}\cdot (0.1101)_2, \hspace{1cm} \tilde{y} = 2^1\cdot (0.1011)_2
+\end{equation*}
+
+\begin{center}$
+\renewcommand\arraystretch{1.2}
+\begin{array}{rcl}
+  \tilde{x}+2\tilde{y}  & = & 2^{-2}\cdot (0.1101)_2 + 2^2\cdot (0.1011)_2\\
+                        & = & 2^2\cdot (0.00001101)_2 + 2^2\cdot (0.1011)_2\\
+                        & = & 2^2\cdot (0.1011\underline{1}101)_2 \hspace{.5cm} \mbox{numero in aritmetica esatta}
+\end{array}
+$\end{center}
+
+Sappiamo che $\tilde{z}=fl(z)$
+
+\begin{equation*}
+  0.1011+0.0001=0.1100
+\end{equation*}
+
+Quindi $\tilde{z}=fl(z)=2^2\cdot (0.1100)_2$
+
+
+\subsection*{Analisi degli errori}
+
+
+\paragraph{Errore inerente} Relativo al condizionamento. Quando l'errore è sensibile al problema che abbiamo sui dati, quanto il problema amplifica gli errori in input.
+
+\paragraph{Errore algoritmico} Relativo alla stabilità. Differenza tra il risultato in aritmetica esatta e in aritmetica di macchina. Un algoritmo è stabile quando l'errore algoritmico è molto minore di quello della macchina.
+
+
+%%%%%%%%%%
+\subsection{Esercizio 2}
+
+Si vuole calcolare $y=f(x)$.
+
+
+\paragraph{a)} Definsci l'errore inerente e il condizionamento.
+
+\begin{equation*}
+  \mbox{condizionamento} = \dfrac{|\mbox{err}_{relativo}(\mbox{output})|}{|\mbox{err}_{relativo}(\mbox{intput})|}
+\end{equation*}
+
+
+\paragraph{b)} Studia il condizionamento di $f(x)=\dfrac{2+x^2}{x^2-2}$.\medskip
+
+Utilizzando Taylor si può scrivere
+
+\begin{equation*}
+  \mbox{cond}_f (x) = \dfrac{|x|\cdot |f'(x)|}{f|x|}
+\end{equation*}
+  
+\begin{equation*}
+  f'(x) = \dfrac{2x(x^2-2)-2x(2+x^2)}{(x^2-2)^2} = \dfrac{-8x}{(x^2-2)^2}
+\end{equation*}
+  
+\begin{equation*}
+\begin{split}
+  \mbox{cond}_f (x) & = \dfrac{|x|\cdot \Bigg| \dfrac{8x}{(x^2-2)^2}\Bigg|}{\Bigg| \dfrac{2+x^2}{x^2-2}\Bigg| }\\[1.5ex]
+  & = \dfrac{|x|\cdot |8x|}{(x^2-2)^2} \cdot \dfrac{|x^2-2|}{2+x^2}\\[1.5ex]
+  & = \dfrac{8x^2}{(x^2-2)^2|x^2-2|}
+\end{split}
+\end{equation*}
+
+A questo punto bisogna dire se è ben condizionato o mal condizionato. Il problema è mal condizionato se $x^2\simeq 2$, ovvero $x\simeq \sqrt{2}$ (e quindi tende a $+\infty$), ben condizionato altrimenti.
+
+
+\paragraph{c)} Definsci l'errore algoritmico e il concetto di stabilità.
+
+
+\paragraph{d)} Studia la stabilità dell'algoritmo che valuta $f(x)$ nel punto $x$ (ovvero per quali valori di $x$ l'al\-go\-rit\-mo è stabile o meno).\medskip
+
+Si intendono le seguenti operazioni elementari:
+
+\begin{center}
+\begin{tikzpicture}[->,>=stealth', shorten >=1pt, auto, node distance=2.4cm, semithick]
+  \tikzstyle{every state}=[]
+
+  \node[state]         (E) 					  {$x$};
+  \node[state]         (A) [right of=E]       {$x^2$};
+  \node[state]         (B) [above right of=A] {$x^2+2$};
+  \node[state]         (D) [below right of=A] {$x^2-2$};
+  \node[state]         (C) [below right of=B] {$\dfrac{x^2+2}{x^2-2}$};
+
+  \path (E) edge			  node {$\delta *$} (A)
+  		  (A) edge              node {$\delta_+$} (B)
+        (B) edge              node {$\delta_/$} (C)
+        (D) edge              node [below right] {$\delta_/$} (C)
+        (A) edge              node [below left] {$\delta_-$} (D);
+\end{tikzpicture}
+\end{center}
+
+Il delta di un'operazione generica $(\delta_{op})$ si calcola
+
+\begin{equation*}
+  \delta_{op} = \dfrac{|y(op)z - y(fl(op))z|}{|y(op)z|}
+\end{equation*}
+
+Ipotesi $|\delta_{op}|\leq u$. Si fa il primo addendo fratto il risultato dell'addizione:
+
+\begin{equation*}
+\begin{split}
+  c(x\rightarrow x^2) &= \dfrac{x\cdot 2x}{x^2} = 2\\[1.5ex]
+  c(y\rightarrow y+2) &= \dfrac{y\cdot 1}{y+2} = \dfrac{y}{y+2}\\[1.5ex]
+  c\Big(y\rightarrow \dfrac{y}{z}\Big) &= \dfrac{y\cdot \dfrac{1}{z}}{\dfrac{y}{z}} = \dfrac{\dfrac{y}{z}}{\dfrac{y}{z}} = 1\\[1.5ex]
+  c\Big(z\rightarrow \dfrac{y}{z}\Big) &= \dfrac{z\cdot \Big(-\dfrac{y}{z^2}\Big)}{\dfrac{y}{z}} = \dfrac{-y\cdot z}{z^2} = \dfrac{z}{y} = -1
+\end{split}
+\end{equation*}
+
+\begin{center}
+\begin{tikzpicture}[->,>=stealth', shorten >=1pt, auto, node distance=3cm, semithick]
+  \tikzstyle{every state}=[]
+
+  \node[state]         (E) 					  {$x$};
+  \node[state]         (A) [right of=E]       {$x^2$};
+  \node[state]         (B) [above right of=A] {$x^2+2$};
+  \node[state]         (D) [below right of=A] {$x^2-2$};
+  \node[state]         (C) [below right of=B] {$\dfrac{x^2+2}{x^2-2}$};
+
+  \path (E) edge			  node {$2$} (A)
+  		  (A) edge              node {$\dfrac{x^2}{x^2+2}$} (B)
+        (B) edge              node {$1$} (C)
+        (D) edge              node [below right] {$-1$} (C)
+        (A) edge              node [below left] {$\dfrac{x^2}{x^2-2}$} (D);
+\end{tikzpicture}
+\end{center}
+
+\begin{equation*}
+\begin{split}
+  err_{alg} = &~ \delta_/ +1\Big(\delta_+ +\dfrac{x^2}{x^2+2}\cdot (\delta_* +2\delta)\Big)\\[1.5ex]
+  &~ \delta_/ -1\Big(\delta_- +\dfrac{x^2}{x^2-2}\cdot (\delta_* +2\delta)\Big)\\[1.5ex]
+  \Rightarrow |err_{alg}| = &~ |\delta_/| + |\delta_+| + \dfrac{x^2}{x^2+2}\cdot (|\delta_*|+2|\delta|)\\[1.5ex]
+  &~ |\delta_/| + |\delta_-| + \dfrac{x^2}{x^2-2}\cdot (|\delta_*|+2|\delta|)
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+|err_{alg}| \leq u+u+u+2u+u+\dfrac{x^2}{|x^2-2|}\cdot 3u = 6u + \dfrac{x^2}{|x^2-2|}\cdot 3u
+\end{equation*}
+
+Vogliamo evitare che il denominatore $(|x^2-2|)$ si annulli. Quindi l'algoritmo è instabile se $x^2\simeq 2$, cioè $x\simeq \sqrt{2}$ o $x\simeq -\sqrt{2}$, stabile altrimenti.
+
+
+\paragraph{e)} Studia il condizionamento di $g(x)=\sqrt{f(x)}$ e la stabilità dell'algoritmo che valuta $g(x)$ in $x$.\\
+
+Sappiamo che $g(x)=\sqrt{\dfrac{2+x^2}{x^2-2}}$.
+
+\begin{center}
+\begin{tikzpicture}[->,>=stealth', shorten >=1pt, auto, node distance=2.4cm, semithick]
+  \tikzstyle{every state}=[]
+
+  \node[state]         (E) 					  {$x$};
+  \node[state]         (A) [right of=E]       {$x^2$};
+  \node[state]         (B) [above right of=A] {$x^2+2$};
+  \node[state]         (D) [below right of=A] {$x^2-2$};
+  \node[state]         (C) [below right of=B] {$\dfrac{x^2+2}{x^2-2}$};
+  \node[state]         (F) [right of=C] {$g(x)$};
+
+  \path (E) edge			  node {$\delta *$} (A)
+  		  (A) edge              node {$\delta_+$} (B)
+        (B) edge              node {$\delta_/$} (C)
+        (D) edge              node [below right] {$\delta_/$} (C)
+        (A) edge              node [below left] {$\delta_-$} (D)
+        (C) edge        node {$\delta_{\sqrt{~}}$} (F);
+\end{tikzpicture}
+\end{center}
+
+\begin{equation*}
+\begin{split}
+  cond_g(x) &= \dfrac{|x|\cdot|g'(x)|}{|g(x)|}\\[1.5ex]
+  g'(x) &= \dfrac{f'(x)}{2g(x)} = \dfrac{f'(x)}{2\sqrt{f(x)}}\\[1.5ex]
+  \Rightarrow cond_g(x) &= \dfrac{|x|\cdot \dfrac{|f'(x)|}{2\sqrt{f(x)}}}{\sqrt{f(x)}} = \dfrac{|x|\cdot |f'(x)|}{2\cdot |f(x)|} = \dfrac{1}{2}
+\end{split}
+\end{equation*}
+
+Se questo è piccolo, anche $g$ lo è, quindi $g$ è condizionato anche quando questo lo è. La funzione $g(x)$ è ben condizionata quando lo è $f(x)$.
+
+\begin{equation*}
+\begin{split}
+  c(y\rightarrow \sqrt{y}) &= \dfrac{y\cdot \dfrac{1}{2\sqrt{y}}}{\sqrt{y}} = \dfrac{y}{2|y|}\\[1.5ex]
+  |c(y\rightarrow \sqrt{y})| &= \dfrac{1}{2}\cdot \dfrac{|y|}{|y|} = \dfrac{1}{2}
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+  err_{alg}(g) &= \delta_{\sqrt{~}} + \dfrac{f(x)}{2|f(x)|}\cdot err_{alg}(f)\\[1.5ex]
+  \Rightarrow |err_{alg}(g)| &\leq u+\dfrac{1}{2} |err_{alg}(f)|
+\end{split}
+\end{equation*}
+
+L'algoritmo di calcolo $g$ è stabile quando lo è quello che calcola $f$, cioè quando $x^2\not\simeq 2$.
+
+
+%%%%%%%%%%
+\subsection{Esercizio 3}
+
+Sia $\mathcal{F} = \mathcal{F}$ (2, $t$, $p_{min}$, $p_{max}$) con arrotondamento.
+
+
+\paragraph{a)} Determina i parametri sapendo che $p_{max}=t$, $\mathcal{F}$ contiene 64 elementi positivi, e $real_{max}=15$.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{l|l}
+                                                              & $1\leq d_1\leq B-1$             \\
+$\mathcal{F}=\{0\}\cup \{\pm(d_1B^{-1}+\ldots +d_tB^{-t})B^p$ & $0\leq d_2,\ldots ,d_t\leq B-1$ \\
+                                                              & $-p_{min}\leq p\leq p_{max}$   
+\end{tabular}
+\end{table}
+
+\begin{equation*}
+  (B-1)B^{t-1}(p_{min}+p_{max}+1)=64 \Rightarrow 2^{t-1}(p_{min}+t+1)=64
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+  real_{max}  &= B^{p_{max}}(B-1)(B^{-1}+\ldots +B^{-t})\\
+              &= B^{p_{max}}(1-B^{-t})\\
+              &= 2^t(1-2^{-t})\\
+              &= 2^t-1\\
+  &\Rightarrow 2^t = 16\\
+  &\Rightarrow t =4,~ p_{max}=t=4
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+  2^3(p_{min}+5) &=64\\
+  p_{min} +5 &= \dfrac{64}{8} = 8\\
+  p_{min} &= 3
+\end{split}
+\end{equation*}
+
+
+\paragraph{b)} Dopo aver definito la precisione di macchina, determina quella di $\mathcal{F}$.\medskip
+
+Nel caso di arrotondamento, $u=\dfrac{B^{1-t}}{2}$. Nel caso di $\mathcal{F}$, $u=\dfrac{2^{1-4}}{2}=\dfrac{2^{-3}}{2}=2^{-4}$.
+
+
+\paragraph{c)} Dato $x=\dfrac{1}{5}$, verifica $x\neq \mathcal{F}$ e trova $fl(x)\in \mathcal{F}$.
+
+\begin{equation*}
+  \tilde{x}=fl(x)=2^{-2}(0.1101)_2
+\end{equation*}
+
+Come prima, perché abbiamo lo stesso numero di cifre della mantissa, abbiamo la stessa rappresentazione.
+
+\paragraph{d)} Dato $y=\dfrac{1}{3}$, verifica $y\not\in \mathcal{F}$ e determina $fl(y)$.\medskip
+
+Abbiamo $y=0.\overline{3}$
+
+\begin{table}[H]
+\centering
+\begin{tabular}{c|c}
+$0.\overline{3}$ & 0                      \\
+$0.\overline{6}$ & 0                      \\
+$1.\overline{3}$ & \multicolumn{1}{c|}{1} \\
+$0.\overline{6}$ & \multicolumn{1}{c|}{0}
+\end{tabular}
+\end{table}
+
+\begin{equation*}
+\begin{split}
+  \Rightarrow y &= (0.\overline{01})_2 \not\in \mathcal{F}\\
+                &= (0.010101\ldots )_2
+\end{split}
+\end{equation*}
+
+Scrivere con 0 prima della virgola ma con 1 come prima cifra decimale $\Rightarrow$ spostare tutto di una cifra a sinistra $\Rightarrow$ 
+
+\begin{equation*}
+\begin{split}
+  y &= 2^{-1}(0.101010\ldots )_2\\
+    &= 2^{-1}(0.\overline{10})_2
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+  fl(y)=2^{-1}(0.1011)_2
+\end{equation*}
+
+
+\paragraph{e)} Calcola $x+y=z$ e determina $\tilde{z}=fl(z)$.
+
+\begin{equation*}
+  z = x+y = \dfrac{1}{3} + \dfrac{1}{5} = \dfrac{8}{15}
+\end{equation*}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{c|c}
+$\nicefrac{8}{15}$  & 0                      \\
+$\nicefrac{16}{15}$ & \multicolumn{1}{c|}{1} \\
+$\nicefrac{2}{15}$  & \multicolumn{1}{c|}{0} \\
+$\nicefrac{4}{15}$  & \multicolumn{1}{c|}{0} \\
+$\nicefrac{8}{15}$  & \multicolumn{1}{c|}{0} \\
+$\nicefrac{16}{15}$ & 1                     
+\end{tabular}
+\end{table}
+
+\begin{equation*}
+\begin{split}
+  z &= (0.\overline{1000})_2\\
+    &= (0.10001000\ldots )_2\\
+  \tilde{z} &= (0.1001)_2
+\end{split}
+\end{equation*}
+
+
+\paragraph{e)} Calcola $\tilde{\omega}=\tilde{x}fl(\textcircled{+})\tilde{y}$ e trova la relazione tra $\tilde{\omega}$ e $\tilde{z}$.
+
+
+\paragraph{f)} Definisci i numeri denormalizzati. Quali sono quelli per $\mathcal{F}$?\medskip
+
+I numeri denormalizati sono numeri che non fanno parte dell'insieme originario.
+
+\begin{equation*}
+  \mathcal{G} = \{\pm (d_2\cdot 2^{-2} + d_3\cdot 2^{-3} + d_4\cdot 2^{-4})\cdot 2^{-3} ~|~ d_2, d_3, d_4 \in \{0,1\}\}
+\end{equation*}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
