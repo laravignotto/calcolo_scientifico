@@ -1,0 +1,318 @@
+\section{Primo esercizio dell'esame}
+
+Cerchiamo di capire come risolvere il primo problema che di solito dobbiamo affrontare per passare l'esame di calcolo scientifico. Le competenze necessarie saranno illustrate passo passo cercando di fornire anche una guida teorica minimale.
+
+%%%%%%%%%%
+\subsection{Testo del problema}
+\begin{enumerate}
+  \item Sia $ \mathcal{F} = \mathcal{F}(2,4,p,q) $ l'insieme dei numeri di macchina con arrotondamento.
+  \begin{itemize}
+    \item Determina $t$, $p_{min}$, $p_{max} = t$ in modo che $\mathcal{F}$ contenga 64 elementi positivi e $realmax$ = 15.
+    \item Dopo aver definito la precisione di macchina $ u $, determina quella di $ \mathcal{F} $.
+    \item Sia $ x = \frac{1}{5} $. Verifica che $ x \notin \mathcal{F} $ e determina $ \tilde{x} = fl(x) \in \mathcal{F} $.
+    \item Sia $ y = \frac{1}{3} $. Verifica che $ y \notin \mathcal{F} $ e determina $ \tilde{y} = fl(y) \in \mathcal{F} $.
+    \item Calcola $ z = x + y $ e determina $ \tilde{z} = fl(z) \in \mathcal{F} $.
+    \item Calcola $ \tilde{w} = \tilde{x} fl(+) \tilde{y} \in \mathcal{F}$. Che relazione c'è tra $\tilde{z}$ e $\tilde{w}$?
+    \item Definisci i numeri denormalizzati. Quanti sono i numeri denormalizzati per $\mathcal{F}$?
+  \end{itemize}
+\end{enumerate}
+
+\subsection{Prerequisiti}
+Partiamo da $\mathbb{R}$. Come ben sappiamo i numeri reali sono infiniti come i numeri naturali $\mathbb{N} = \{1,2,3,4...\}$ ma hanno anche infiniti numeri tra un numero e l'altro, grazia alla precisione in virgola mobile.\bigskip
+
+Ad esempio Tra il numero $4.0$ e $5.0$ ci sono infiniti numeri: $\{ 5.0,5.1,5.11,5.111,5.1111 \}.$ A loro volta tra ciascuna coppia di numeri in virgola mobile ci sono infiniti altri numeri.
+L'insieme $\mathbb{R}$ funziona quindi all'interno di un contesto matematico non limitato in spazio e tempo ma purtroppo non si può applicare con altrettanto successo per la rappresentazione dei numeri nel calcolatore in quanto dovrebbe fornire una soluzione usando una quantità di memoria con un limite preciso e in un tempo ragionevole.\bigskip
+
+Definiamo quindi l'insieme $ \mathbb{F} $ dei numeri di macchina come una quadra:
+\[
+  \mathcal{F} = \{B,t,p_{min},p_{max}\}
+\]
+
+\begin{itemize}
+  \item $B$ è la base in cui vengono rappresentati in numeri.
+  \item $t$ è la mantissa, cioè il numero di cifre significative dopo il punto. Es. $0.12345$ avrà $t = 5$.
+  \item $p_{min}$ è l'esponente minore alla quale possono essere elevati i numeri quando rappresentati.
+  \item $p_{max}$ stessa cosa di $p_{min}$, solo che è l'esponente più grande.
+\end{itemize}
+
+I singoli numeri di $\mathcal{F}$ sono rappresentati attraverso questa formula:
+\[
+  x = \pm (d_1B^{-1} + d_2B^{-2} + \ldots + d_tB^{-t}) B^p
+\]
+\bigskip
+Ad esempio per $\mathcal{F}=(2,4,4,6)$ il numero 
+\[ 
+  x = 0.101 \cdot 2^2
+\]
+si calcola come 
+\begin{flalign}
+  x &= (1 \cdot 2^{-1} + 0 \cdot 2^{-2} + 1 \cdot 2^{-3}) \cdot 2^2\\
+   &= (\frac{1}{2} + 0 + \frac{1}{8}) \cdot 4\\
+   &= \frac{5}{8} \cdot 4\\
+   &= \frac{5}{2}\\
+   &= 2.5
+\end{flalign}
+\bigskip
+
+La precisione di macchina è definita come:
+\[
+  B^{1-t}  (troncamento)
+\]
+
+\[
+  \frac{B^{1-t}}{2}  (arrotondamento)
+\]
+\bigskip
+
+Il numero più grande di $\mathcal{F}$ è chiamato realmax:
+\[
+  realmax = B^{p_{max}}(1-B^{-t})
+\]
+
+il numero più piccolo di $\mathcal{F}$ è chiamato realmin:
+\[
+  realmin = B^{-p_{min}-1}
+\]
+
+\subsection{Esercizio 1}
+Testo dell'esercizio e primi 3 punti.
+
+\subsubsection{Primo punto}
+\begin{itemize}
+  \item Determina $t$, $p_{min}$, $p_{max} = t$ in modo che $\mathcal{F}$ contenga 64 elementi positivi e $realmax$ = 15.
+\end{itemize}
+
+Sappiamo dalla consegna che $ \mathcal{F} = \mathcal{F}(2,t,p,q) $. Quindi gli elementi della quartupla sono definiti come:
+\begin{itemize}
+  \item[] $B = 2$
+  \item[] $t = p_{max}$
+  \item[] $p = p_{min}$
+  \item[] $q = p_{max}$
+\end{itemize}
+
+Conoscendo $B$ e $realmax$ possiamo ricavare $p_{max}$.
+\[
+\renewcommand{\arraystretch}{2.0}
+\begin{array}{rclr}
+    realmax & = & B^{p_{max}}(1-B^{-t}) & \text{formula di realmax} \\
+    15 & = & 2^t(1-2^{-t}) & \text{sostituiamo} \\
+     & = & 2^{t-1}\\
+     & \Rightarrow & 2^t = 16\\
+     & \Rightarrow & t = 4 & \text{otteniamo t}\\
+\end{array}
+\]
+
+
+Sappiamo che il numero di elementi positivi è 64 possiamo ricavare $p_{min}$ grazie alla formula della cardinalità di $\mathcal{F}$. Segue la formula:
+\[
+\renewcommand{\arraystretch}{2.0}
+\begin{array}{rclr}
+    |\mathcal{F}| & = & 1+2(B-1)B^{t-1}(p_{max}+p_{min}+1) & \text{formula della cardinalità} \\
+    64 & = & (B-1)B^{t-1} (1 + p_{min} + p_{max}) & \text{sostituiamo} \\
+     & = & 2^{t-1} (1 + p_{min} + p_{max})\\
+     & = & 2^3 (5 + p_{min})\\
+     & \Rightarrow & 5 + p_{min} = 8\\
+     & \Rightarrow & p_{min} = 3\\
+\end{array}
+\]
+
+\textbf{Nota bene:} dal momento che stiamo cercando solo i numeri positivi dobbiamo togliere lo zero e tutti i numeri negativi. Nella formula qui sopra consiste nel togliere rispettivamente il +1 e dividere per 2. Ecco spiegato il perchè del secondo passaggio.
+
+\null
+
+I numeri all'interno di $\mathcal{F}$ saranno quindi rappresentati dall'insieme:
+
+\begin{equation*}
+  |\mathcal{F}| = \{ \pm 2^p(2^{-1}+d_22^{-2}+d_32^{-3}+d_42^{-4})\quad|\quad d2, d3, d4 \in \{0,1\}, -p_{min} \leq p \leq p_{max} \}
+\end{equation*}
+
+
+\subsubsection{Secondo punto}
+\begin{itemize}
+  \item Definisci la precisione di macchina $u$ e determina quella di $\mathcal{F}$.
+\end{itemize}
+  Riporto la definizione della precisione di macchina dalle slide ufficiali del corso:
+
+  \begin{quote}
+    L'accuratezza di un sistema di numeri di macchina è caratterizzata da una quantità definita \textbf{precisione di macchina} $u$.\\
+
+    Ogni numero reale $x$ nel range di $\mathcal{F}$ sarà approssimato da $fl(x)$ con un errore relativo (\textbf{errore di rappresentazione di} $x$) maggiorato dalla precisione di macchina $u$.
+
+    \begin{equation*}
+      \epsilon_x = \dfrac{|fl(x) - x|}{|x|} \leq u
+    \end{equation*}
+
+    In caso di troncamento:
+    \begin{equation*}
+      u:= B^{1-t}
+    \end{equation*}
+
+    In caso di arrotondamento:
+    \begin{equation*}
+      u:= \dfrac{B^{1-t}}{2}
+    \end{equation*}
+  \end{quote}
+
+  Ora dobbiamo determinare la precisione di macchina di $\mathcal{F}$. Calcoliamo la precisione di macchina con arrotondamento.
+  \[
+  \renewcommand{\arraystretch}{2.0}
+  \begin{array}{rclr}
+      u & = & \dfrac{B^{1-t}}{2} & \text{formula della precisione di macchina} \\
+       & = & \dfrac{2^{1-t}}{2} & \text{sostituiamo} \\
+      & = & 2^{-t}\\
+      & \Rightarrow & \dfrac{1}{16}\\
+  \end{array}
+  \]
+
+\subsubsection{Terzo punto}
+\begin{itemize}
+  \item Sia $ x = \dfrac{1}{5} $. Verifica che $ x \notin \mathcal{F} $ e determina $ \tilde{x} = fl(x) \in \mathcal{F} $.
+\end{itemize}
+
+Partiamo dal numero $\nicefrac{1}{5}$ e raddoppiamolo. Se è maggiore di 1 \ $\rightarrow$ scriviamo a destra 1 e sottraiamo 1. Se invece è minore di 1 $\rightarrow$ scriviamo zero e raddoppiamo. Quando arriviamo a una sequenza di numeri che si ripetono allora abbiamo trovato il periodo e la relativa rappresentazione del numero secondo $\mathcal{F}$.\\
+Esiste anche il caso in cui non ci sia un periodo e semplicemente troviamo troppe cifre per essere rappresentate ( $<t$ ).
+
+\begin{table}[H]
+\centering
+\begin{tabular}{cc|cc}
+\multicolumn{1}{c|}{\multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}moltiplicato per\\ la base (2)\end{tabular}}} & $\nicefrac{1}{5}$ & 0  & \\
+\multicolumn{1}{c|}{}           & $\nicefrac{2}{5}$ & \multicolumn{1}{c|}{0} &  \\
+                                & $\nicefrac{4}{5}$ & \multicolumn{1}{c|}{0} & \multirow{2}{*}{periodo} \\
+                                & $\nicefrac{8}{5}$ & \multicolumn{1}{c|}{1} &  \\
+                                & $\nicefrac{6}{5}$ & \multicolumn{1}{c|}{1} &  \\
+                                & $\nicefrac{2}{5}$ &                        &  
+\end{tabular}
+\end{table}
+
+Ha rappresentazione infinita, quindi $\notin \mathcal{F}$. E per trovare $\tilde{x}=fl(x)$?
+
+\[
+\renewcommand{\arraystretch}{2.0}
+\begin{array}{rclr}
+  x & = & (0.\overline{0011})_2 & \text{rappresentazione di x} \\
+    & = & 2^{-2}(0.\overline{1100})_2 & \text{spostiamo la virgola}\\
+    & = & 2^{-2}(0.110\overset{t}{0}110011...)_2 & \text{periodo fino a t+1}\\
+\end{array}
+\]
+
+Arrotondiamo a t cifre decimali guardando quindi il valore di $t$ e $t+1$. Come in qualsiasi arrotondamento se $t = 0$, $t$ assume il valore di $t+1$. Se $t = 1$ e $t+1 = 0$ allora il numero viene troncato, se invece $t+1 = 1$ allora il riporto "scorre" a sinistra fino a che non c'è uno 0 (perchè $t$ diventerebbe 2, quindi "passa" il riporto a sinistra). Abbiamo quindi ottenuto la rappresentazione di x in $\mathcal{F}$.
+
+\begin{equation*}
+  \tilde{x} = 2^{-2}(0.1101)_2
+\end{equation*}
+
+\subsubsection{Al contrario}
+Può capitare di dover eseguire il percorso inverso, dovendo cioè convertire un numero, a volte periodico, in base 2 ad un numero in base 10. Per convenienza utilizziamo come esempio il numero qui sopra.
+
+\[
+\renewcommand{\arraystretch}{2.0}
+\begin{array}{rclr}
+  x & = & (0.\overline{0011})_2 & \text{rappresentazione di x} \\
+\end{array}
+\]
+
+Notiamo che anche se $x$ è periodico in base 2, non è detto che lo sia anche in base 10. Tant'è che già sappiamo essere $x=\nicefrac{1}{5}$ per definizione sopra.
+
+Il primo passo da effettuare è quello di trovare la \textbf{frazione generatrice} in base 2 del numero. Cioè quella divisione che se eseguita porta al numero periodico. Per fare questo si scrive al numeratore tutto il numero così com'è presentato meno le cifre al di fuori del periodo. Il tutto diviso per tanti \textbf{b - 1} quante sono le cifre del periodo e tanti zeri quante sono le cifre dell'antiperiodo. L'antiperiodo sono le cifre tra il periodo e il punto.
+
+\[
+\renewcommand{\arraystretch}{2.0}
+\begin{array}{rclr}
+  x & = & (0.\overline{0011})_2 & \text{rappresentazione di x} \\
+    & = & (\frac{0011 - 0}{1111})_2 & \text{frazione generatrice}\\
+    & = & (\frac{2+1}{15})_{10} & \text{conversione in base 10}\\
+    & = & (\frac{3}{15})_{10} & \text{}\\
+    & = & \frac{1}{5} & \text{risultato}\\
+\end{array}
+\]
+
+
+\subsubsection{Quarto punto}
+Identico al terzo. Da completare.
+
+\subsubsection{Quinto punto}
+\begin{itemize}
+  \item Calcola $ z = x + y $ e determina $ \tilde{z} = fl(z) \in \mathcal{F} $.
+\end{itemize}
+Notiamo che z non è un numero di macchina e quindi va calcolato in base a x e y non di macchina.
+\begin{equation*}
+  z = x + y = \dfrac{1}{5} + \dfrac{1}{3} = \dfrac{3+5}{15} = \dfrac{8}{15}
+\end{equation*}
+
+Adesso dobbiamo determinare la rappresentazione di z sul calcolatore, quindi $\tilde{z} = fl(z)$. Il procedimento è lo stesso per il Quatro punto e il Terzo punto.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{cc|cc}
+\multicolumn{1}{c|}{\multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}moltiplicato per\\ la base (2)\end{tabular}}} & $\nicefrac{8}{15}$ & 0  & \\
+\multicolumn{1}{c|}{}           & $\nicefrac{16}{15}$ & \multicolumn{1}{c|}{1} &  \\
+                                & $\nicefrac{2}{15}$ & \multicolumn{1}{c|}{0} & \multirow{2}{*}{periodo} \\
+                                & $\nicefrac{4}{15}$ & \multicolumn{1}{c|}{0} &  \\
+                                & $\nicefrac{8}{15}$ & \multicolumn{1}{c|}{0} &  \\
+                                & $\nicefrac{16}{15}$ &                        &  
+\end{tabular}
+\end{table}
+
+Quindi $z = (0.\overline{1000})_2$. Per determinare $\tilde{z} = fl(z)$ dobbiamo prima arrotondare $z$ sviluppando il periodo in modo da avere t+1 cifre con $t = 4$.
+
+\[
+\begin{array}{lr}
+  z = (0.100\underset{t}{0}100...)_2 & \text{sviluppiamo il periodo}\\
+  \tilde{z} = (0.1001)_2 & \text{arrotondamento}
+\end{array}
+\]
+
+\subsubsection{Sesto punto}
+\begin{itemize}
+  \item Calcola $ \tilde{w} = \tilde{x} fl(+) \tilde{y} \in \mathcal{F}$. Che relazione c'è tra $\tilde{z}$ e $\tilde{w}$?
+\end{itemize}
+
+Sappiamo che $\tilde{x} = 2^{-2}(0.1101)_2$ e $\tilde{y} = 2^{-1}(0.1011)_2$. Calcoliamo quindi $\tilde{w}$ come segue dove $\oplus$ è l'operazione $+$ in aritmetica di macchina.\bigskip
+
+Ricordiamoci che $\tilde{x}$ e $\tilde{y}$ devono avere lo stesso esponente, quindi in $\tilde{x}$ spostiamo di 1 posto a destra dalla virgola e aggiungiamo uno zero.
+
+\[
+  \renewcommand{\arraystretch}{2.0}
+\begin{array}{rcl}
+  \tilde{w} &=& 2^{-2}(0.1101)_2 \oplus 2^{-1}(0.1011)_2 \\
+            &=& 2^{-1}(0.01101)_2 \oplus 2^{-1}(0.1011)_2 \\
+            &=& 2^{-1}(1.00011)_2 \\
+            &=& (0.100011)_2 \\
+            &\Rightarrow& \tilde{w} = (0.1001)_2
+\end{array}
+\]
+
+Scriviamo per spirito di completezza l'addizione in base 2.
+
+\[
+  \renewcommand{\arraystretch}{1.0}
+\begin{array}{lc}
+  \overset{1}{0}.\overset{1}{0}\overset{1}{1}\overset{1}{1}1&+\\
+  0.1011&=\\
+  \hline
+  1.0010&
+\end{array}
+\]
+
+\textbf{Nota bene:} al momento del calcolo dobbiamo eseguire le operazioni in binario (come farebbe una cpu) ipotizzando di avere precisione infinita, quindi infinite cifre per la mantissa. Il troncamento/arrotondamento avverrà direttamente sul risultato.
+
+\subsubsection{Settimo punto}
+\begin{itemize}
+  \item Definisci i numeri denormalizzati. Quanti sono i numeri denormalizzati per $\mathcal{F}$?
+\end{itemize}
+
+\begin{equation*}
+  \mathcal{G} = \{\pm (d_2\cdot 2^{-2} + d_3\cdot 2^{-3} + d_4\cdot 2^{-4})\cdot 2^{-3} ~|~ d_2, d_3, d_4 \in \{0,1\} , (d_2, d_3, d_4) \neq (0,0,0) \}
+\end{equation*}
+
+Nel nostro caso $p_{min} = 3$. Calcoliamo la cardinalità di $\mathbb{G}$ cioè $|\mathbb{G}|$. Ricordiamo che per $\#triple$ si intende il numero di triplette possibili $(d_2,d_3,d_4)$ In questo caso sono $2^3 -1$ dal momento che la tripla, come appena definito, deve essere diversa da zero.
+
+\begin{equation}
+  |\mathbb{G}| = 2*\#triple = 2*(2^3-1) = 2*7 = 14
+\end{equation}
+
+Citiamo la formula generale:
+\begin{equation}
+    |\mathbb{G}| = B^t-B
+  \end{equation}
+

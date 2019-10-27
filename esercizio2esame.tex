@@ -1,0 +1,162 @@
+\section{Secondo esercizio dell'esame}
+Il secondo esercizio dell'esame riguarda lo studio del condizionamento di una funzione.
+
+Si vuole calcolare $y=f(x)$.
+
+\subsection{Primo punto}
+ Definsci l'errore inerente e il condizionamento.
+
+\begin{equation*}
+  \mbox{condizionamento} = \dfrac{|\mbox{err}_{relativo}(\mbox{output})|}{|\mbox{err}_{relativo}(\mbox{input})|}
+\end{equation*}
+
+
+\subsection{Secondo punto} Studia il condizionamento di $f(x)=\dfrac{2+x^2}{x^2-2}$.\medskip
+
+Utilizzando Taylor si può scrivere
+
+\begin{equation*}
+  \mbox{cond}_f (x) = \dfrac{|x|\cdot |f'(x)|}{f|x|}
+\end{equation*}
+  
+\begin{equation*}
+  f'(x) = \dfrac{2x(x^2-2)-2x(2+x^2)}{(x^2-2)^2} = \dfrac{-8x}{(x^2-2)^2}
+\end{equation*}
+  
+\begin{equation*}
+\begin{split}
+  \mbox{cond}_f (x) & = \dfrac{|x|\cdot \Bigg| \dfrac{8x}{(x^2-2)^2}\Bigg|}{\Bigg| \dfrac{2+x^2}{x^2-2}\Bigg| }\\[1.5ex]
+  & = \dfrac{|x|\cdot |8x|}{(x^2-2)^2} \cdot \dfrac{|x^2-2|}{2+x^2}\\[1.5ex]
+  & = \dfrac{8x^2}{(x^2-2)^2|x^2-2|}
+\end{split}
+\end{equation*}
+
+A questo punto bisogna dire se è ben condizionato o mal condizionato. Il problema è mal condizionato se $x^2\simeq 2$, ovvero $x\simeq \sqrt{2}$ (e quindi tende a $+\infty$), ben condizionato altrimenti.
+
+
+\subsection{Terzo punto} Definsci l'errore algoritmico e il concetto di stabilità.
+
+
+\subsection{Quarto punto} Studia la stabilità dell'algoritmo che valuta $f(x)$ nel punto $x$ (ovvero per quali valori di $x$ l'al\-go\-rit\-mo è stabile o meno).\medskip
+
+Si intendono le seguenti operazioni elementari:
+
+\begin{center}
+\begin{tikzpicture}[->,>=stealth', shorten >=1pt, auto, node distance=2.4cm, semithick]
+  \tikzstyle{every state}=[]
+
+  \node[state]         (E) 					  {$x$};
+  \node[state]         (A) [right of=E]       {$x^2$};
+  \node[state]         (B) [above right of=A] {$x^2+2$};
+  \node[state]         (D) [below right of=A] {$x^2-2$};
+  \node[state]         (C) [below right of=B] {$\dfrac{x^2+2}{x^2-2}$};
+
+  \path (E) edge			  node {$\delta *$} (A)
+  		  (A) edge              node {$\delta_+$} (B)
+        (B) edge              node {$\delta_/$} (C)
+        (D) edge              node [below right] {$\delta_/$} (C)
+        (A) edge              node [below left] {$\delta_-$} (D);
+\end{tikzpicture}
+\end{center}
+
+Il delta di un'operazione generica $(\delta_{op})$ si calcola
+
+\begin{equation*}
+  \delta_{op} = \dfrac{|y(op)z - y(fl(op))z|}{|y(op)z|}
+\end{equation*}
+
+Ipotesi $|\delta_{op}|\leq u$. Si fa il primo addendo fratto il risultato dell'addizione:
+
+\begin{equation*}
+\begin{split}
+  c(x\rightarrow x^2) &= \dfrac{x\cdot 2x}{x^2} = 2\\[1.5ex]
+  c(y\rightarrow y+2) &= \dfrac{y\cdot 1}{y+2} = \dfrac{y}{y+2}\\[1.5ex]
+  c\Big(y\rightarrow \dfrac{y}{z}\Big) &= \dfrac{y\cdot \dfrac{1}{z}}{\dfrac{y}{z}} = \dfrac{\dfrac{y}{z}}{\dfrac{y}{z}} = 1\\[1.5ex]
+  c\Big(z\rightarrow \dfrac{y}{z}\Big) &= \dfrac{z\cdot \Big(-\dfrac{y}{z^2}\Big)}{\dfrac{y}{z}} = \dfrac{-y\cdot z}{z^2} = \dfrac{z}{y} = -1
+\end{split}
+\end{equation*}
+
+\begin{center}
+\begin{tikzpicture}[->,>=stealth', shorten >=1pt, auto, node distance=3cm, semithick]
+  \tikzstyle{every state}=[]
+
+  \node[state]         (E) 					  {$x$};
+  \node[state]         (A) [right of=E]       {$x^2$};
+  \node[state]         (B) [above right of=A] {$x^2+2$};
+  \node[state]         (D) [below right of=A] {$x^2-2$};
+  \node[state]         (C) [below right of=B] {$\dfrac{x^2+2}{x^2-2}$};
+
+  \path (E) edge			  node {$2$} (A)
+  		  (A) edge              node {$\dfrac{x^2}{x^2+2}$} (B)
+        (B) edge              node {$1$} (C)
+        (D) edge              node [below right] {$-1$} (C)
+        (A) edge              node [below left] {$\dfrac{x^2}{x^2-2}$} (D);
+\end{tikzpicture}
+\end{center}
+
+\begin{equation*}
+\begin{split}
+  err_{alg} = &~ \delta_/ +1\Big(\delta_+ +\dfrac{x^2}{x^2+2}\cdot (\delta_* +2\delta)\Big)\\[1.5ex]
+  &~ \delta_/ -1\Big(\delta_- +\dfrac{x^2}{x^2-2}\cdot (\delta_* +2\delta)\Big)\\[1.5ex]
+  \Rightarrow |err_{alg}| = &~ |\delta_/| + |\delta_+| + \dfrac{x^2}{x^2+2}\cdot (|\delta_*|+2|\delta|)\\[1.5ex]
+  &~ |\delta_/| + |\delta_-| + \dfrac{x^2}{x^2-2}\cdot (|\delta_*|+2|\delta|)
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+|err_{alg}| \leq u+u+u+2u+u+\dfrac{x^2}{|x^2-2|}\cdot 3u = 6u + \dfrac{x^2}{|x^2-2|}\cdot 3u
+\end{equation*}
+
+Vogliamo evitare che il denominatore $(|x^2-2|)$ si annulli. Quindi l'algoritmo è instabile se $x^2\simeq 2$, cioè $x\simeq \sqrt{2}$ o $x\simeq -\sqrt{2}$, stabile altrimenti.
+
+
+\subsection{Quinto punto} Studia il condizionamento di $g(x)=\sqrt{f(x)}$ e la stabilità dell'algoritmo che valuta $g(x)$ in $x$.\\
+
+Sappiamo che $g(x)=\sqrt{\dfrac{2+x^2}{x^2-2}}$.
+
+\begin{center}
+\begin{tikzpicture}[->,>=stealth', shorten >=1pt, auto, node distance=2.4cm, semithick]
+  \tikzstyle{every state}=[]
+
+  \node[state]         (E) 					  {$x$};
+  \node[state]         (A) [right of=E]       {$x^2$};
+  \node[state]         (B) [above right of=A] {$x^2+2$};
+  \node[state]         (D) [below right of=A] {$x^2-2$};
+  \node[state]         (C) [below right of=B] {$\dfrac{x^2+2}{x^2-2}$};
+  \node[state]         (F) [right of=C] {$g(x)$};
+
+  \path (E) edge			  node {$\delta *$} (A)
+  		  (A) edge              node {$\delta_+$} (B)
+        (B) edge              node {$\delta_/$} (C)
+        (D) edge              node [below right] {$\delta_/$} (C)
+        (A) edge              node [below left] {$\delta_-$} (D)
+        (C) edge        node {$\delta_{\sqrt{~}}$} (F);
+\end{tikzpicture}
+\end{center}
+
+\begin{equation*}
+\begin{split}
+  cond_g(x) &= \dfrac{|x|\cdot|g'(x)|}{|g(x)|}\\[1.5ex]
+  g'(x) &= \dfrac{f'(x)}{2g(x)} = \dfrac{f'(x)}{2\sqrt{f(x)}}\\[1.5ex]
+  \Rightarrow cond_g(x) &= \dfrac{|x|\cdot \dfrac{|f'(x)|}{2\sqrt{f(x)}}}{\sqrt{f(x)}} = \dfrac{|x|\cdot |f'(x)|}{2\cdot |f(x)|} = \dfrac{1}{2}
+\end{split}
+\end{equation*}
+
+Se questo è piccolo, anche $g$ lo è, quindi $g$ è condizionato anche quando questo lo è. La funzione $g(x)$ è ben condizionata quando lo è $f(x)$.
+
+\begin{equation*}
+\begin{split}
+  c(y\rightarrow \sqrt{y}) &= \dfrac{y\cdot \dfrac{1}{2\sqrt{y}}}{\sqrt{y}} = \dfrac{y}{2|y|}\\[1.5ex]
+  |c(y\rightarrow \sqrt{y})| &= \dfrac{1}{2}\cdot \dfrac{|y|}{|y|} = \dfrac{1}{2}
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+  err_{alg}(g) &= \delta_{\sqrt{~}} + \dfrac{f(x)}{2|f(x)|}\cdot err_{alg}(f)\\[1.5ex]
+  \Rightarrow |err_{alg}(g)| &\leq u+\dfrac{1}{2} |err_{alg}(f)|
+\end{split}
+\end{equation*}
+
+L'algoritmo di calcolo $g$ è stabile quando lo è quello che calcola $f$, cioè quando $x^2\not\simeq 2$.
+
